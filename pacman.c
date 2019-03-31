@@ -1,15 +1,39 @@
 #include "adjacency_list.h"
+#include <stdio.h>
+#include <stdlib.h>
 
 typedef struct{
   int x, y;
 }position;
 
+void print_tab(int n, int m, position pacman, position ghost){
+  for(int i = 0; i <= m + 1; ++i)
+    printf("- ");
+  printf("\n");
+
+  for(int i = 0; i < n; ++i){
+    printf("| ");
+    for(int j = 0; j < m; ++j)
+      if(j == pacman.x && i == pacman.y)
+        printf("@ ");
+      else if(j == ghost.x && i == ghost.y)
+        printf("G ");
+      else
+        printf("* ");
+    printf("|\n");
+  }
+
+  for(int i = 0; i <= m + 1; ++i)
+    printf("- ");
+  printf("\n\n");
+}
+
 int main(){
-  int n, m, error;
-  position pacman, ghost;
   Grafo *tabuleiro;
+  int n, m, error, move;
+  position pacman, ghost;
   scanf("%d %d", &n, &m);
-  tabuleiro = createGraph(n*m, &error);
+  tabuleiro = CriarGrafo(n*m, &error);
   if(error)
     return 1;
 
@@ -19,8 +43,29 @@ int main(){
       if(i < n - 1) inserirAresta(tabuleiro, i*m + j, (i + 1)*m + j, 1, &error);
       if(j > 0) inserirAresta(tabuleiro, i*m + j, i*m + j - 1, 1, &error);
       if(j < m - 1) inserirAresta(tabuleiro, i*m + j, i*m + j + 1, 1, &error);
-
     }
+  }
+  scanf("%d %d", &ghost.x, &ghost.y);
+  scanf("%d %d", &pacman.x, &pacman.y);
+
+  print_tab(n, m, pacman, ghost);
+
+  while(pacman.x != ghost.x || pacman.y != ghost.y){
+    if(pacman.x < ghost.x)  ++pacman.x;
+    else if(pacman.x > ghost.x)  --pacman.x;
+    else if(pacman.y < ghost.y)  ++pacman.y;
+    else  --pacman.y;
+
+    move = rand()%2;
+    if(move){
+      move = rand()%4;
+      if(move == 0 && ghost.x > 0)  --ghost.x;
+      else if(move == 1 && ghost.x < m - 1)  ++ghost.x;
+      else if(move == 2 && ghost.y > 0)  --ghost.y;
+      else if(move == 3 && ghost.y < n - 1)  ++ghost.y;
+    }
+
+    print_tab(n, m, pacman, ghost);
   }
 
 
