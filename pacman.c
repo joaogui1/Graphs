@@ -29,9 +29,11 @@ void print_tab(int n, int m, position pacman, position ghost){
 }
 
 int main(){
+  Node *pos;
+  Lista *adj;
   Grafo *tabuleiro;
-  int n, m, error, move;
   position pacman, ghost;
+  int n, m, error, move, size;
   scanf("%d %d", &n, &m);
   tabuleiro = CriarGrafo(n*m, &error);
   if(error)
@@ -58,11 +60,19 @@ int main(){
 
     move = rand()%2;
     if(move){
-      move = rand()%4;
-      if(move == 0 && ghost.x > 0)  --ghost.x;
-      else if(move == 1 && ghost.x < m - 1)  ++ghost.x;
-      else if(move == 2 && ghost.y > 0)  --ghost.y;
-      else if(move == 3 && ghost.y < n - 1)  ++ghost.y;
+      adj = &(tabuleiro->adj[ghost.y*m + ghost.x]);
+      size = adj->tam;
+      move = rand()%size;
+      pos = adj->ini;
+      while(move-->0)
+        pos = pos->next;
+      ghost.x = pos->id%m;
+      ghost.y = pos->id/m;
+
+      // if(move == 0 && ghost.x > 0)  --ghost.x;
+      // else if(move == 1 && ghost.x < m - 1)  ++ghost.x;
+      // else if(move == 2 && ghost.y > 0)  --ghost.y;
+      // else if(move == 3 && ghost.y < n - 1)  ++ghost.y;
     }
 
     print_tab(n, m, pacman, ghost);
