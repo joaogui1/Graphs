@@ -4,12 +4,11 @@
 #include <stdlib.h>
 
 int min(int a, int b){
-  return (a + b - abs(a - b))/2;
-  // return (a > b)?b:a;
+  return (a > b)?b:a;
 }
 
 int max(int a, int b){
-  return -min(-a, -b);
+  return (a > b)?a:b;
 }
 
 double jacquard(int *n, graph *g1, graph *g2){
