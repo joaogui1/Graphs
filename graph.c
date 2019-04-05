@@ -1,8 +1,9 @@
 #include "graph.h"
 #include <string.h>
 
-int min(int a, int b) {
-	return a < b ? a : b;
+int min(int a, int b){
+  return (a + b - abs(a - b))/2;
+  // return (a > b)?b:a;
 }
 
 int noError() {	return 0; }
@@ -292,4 +293,14 @@ void destroyGraph(graph* g, int* error){
 	if(g != NULL) free(g);
 	*error = noError();
 	return;
+}
+
+/*---------------------------------*/
+void printGraph(graph* g){
+  for(int i = 0; i < g->numVertices; i++){
+    for(int j = 0; j < g->numVertices; j++){
+      printf("%d ", g->edges[i][j]);
+    }
+    printf("\n");
+  }
 }

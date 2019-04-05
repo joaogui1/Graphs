@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define MAXV 100
+#define MAXV 129
 #define noEdge 0
 typedef int elem;
 
@@ -23,5 +23,8 @@ void insertEdge(graph* g, int* from, int* to, elem* weight, int* error);
 void removeEdge(graph* g, int* from, int* to, int* error);
 int* eulerCycle(graph* g, int* error);
 void findBridges(graph* g, int** isBridge);
+
+int min(int a, int b);
+void printGraph(graph* g);
 
 #endif
