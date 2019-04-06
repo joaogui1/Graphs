@@ -74,7 +74,7 @@ int main(){
     print_tab(n, m, pacman, ghost);
   }
 
-  destroyGraph(tabuleiro);
+  liberaGrafo(tabuleiro, &error);
 
   return 0;
 }

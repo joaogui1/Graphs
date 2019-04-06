@@ -67,6 +67,26 @@ void removerAresta(Grafo* g, int v1, int v2, elem p, int* error){
   *error = 0;
 }
 
+void liberaGrafo(Grafo *g, int* error){
+  if(g == NULL){
+    *error = 1;
+    return;
+  }
+
+  int size = g->numVert;
+  for(int i = 0; i < size; ++i){
+    Node* toBeFreed = g->adj[i].ini;
+    Node* aux;
+    while(toBeFreed != g->adj[i].fim){
+      aux = toBeFreed->next;
+      free(toBeFreed);
+      toBeFreed = aux;
+    }
+    free(toBeFreed);
+  }
+  free(g);
+}
+
 //
 
 //TODO
