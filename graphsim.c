@@ -122,9 +122,11 @@ int main(){
   TextToGraph(text1, size1, &G1);
   TextToGraph(text2, size2, &G2);
 
-  double sim = cossine(&t->n, G1, G2);
+  double cos = cossine(&t->n, G1, G2);
+  double jaq = jacquard(&t->n, G1, G2); 
 
-  printf("%.2lf%%\n", sim*100);
+  printf("A similaridade de cosseno foi: %.2lf%%\n", cos*100);
+  printf("A similaridade de jacquard foi: %.2lf%%\n", jaq*100);
 
   destroy(&t);
   destroyGraph(G1, &error);
