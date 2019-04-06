@@ -55,6 +55,7 @@ int* TextToNumbers(char *str, int* text_size, HashTable** t){
 	int length = strlen(str);
   int parsed_len = 0;
   char* parsed;
+  int intoHash = 0, error = 0;
 
   int* text = calloc((*t)->m, sizeof(int));
   *text_size = 0;
@@ -73,16 +74,19 @@ int* TextToNumbers(char *str, int* text_size, HashTable** t){
             k--; parsed_len++;
           }
           parsed[parsed_len] = '\0';
-          int parsed_num = insert(t, parsed);
-          if(parsed_num != -1){
-            text[*text_size] = parsed_num;
-            *text_size += 1;
-          }
+          int parsed_num = insert(t, parsed, &error);
+          text[*text_size] = parsed_num;
+          *text_size += 1;
+          if(error == 1){
+            intoHash = 0;
+            error = 0;
+          } else intoHash = 1;
         }
         break;
       }
     }
-    //free(parsed);
+    if(!intoHash) free(parsed);
+    intoHash = 0;
 	}
 
   return text;
@@ -122,7 +126,7 @@ int main(){
 
   printf("%.2lf%%\n", sim*100);
 
-  destroy(t);
+  destroy(&t);
   destroyGraph(G1, &error);
   destroyGraph(G2, &error);
   free(text1);

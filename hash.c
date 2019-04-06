@@ -43,7 +43,7 @@ int hashcoder(int m, char* key, int k){
 	return (hash+k)%m;
 }
 
-int insert(HashTable** t, char* word){
+int insert(HashTable** t, char* word, int* error){
 	int k = 0;
 
 	//Enquanto tiver colidindo procurar um novo hashing
@@ -51,15 +51,13 @@ int insert(HashTable** t, char* word){
   do{
 		pos = hashcoder((*t)->m, word, k++);
 		if( (*t)->table[pos].ocupied == FULL && strcmp(word, (*t)->table[pos].word) == 0 ){
-      //printf(".word: %s word: %s\n", (*t)->table[pos].word, word);
-      return (*t)->table[pos].pos; //Se ja existir essa palavra retorna -1
+      *error = 1;
+      return (*t)->table[pos].pos; //Se ja existir essa palavra retorna o .pos
     } 
 	}while((*t)->table[pos].ocupied == FULL);
 	
 
   elem_h palavra;
-  //strcpy(palavra.word, word);
-  //printf("%s", word);
   palavra.word = word;
   palavra.pos = (*t)->n;
   palavra.ocupied = FULL;
@@ -87,11 +85,15 @@ int find(HashTable* t, char* word){
 
 }
 
-void destroy(HashTable* t){
-  t->n = 0;
-	t->m = 0;
-	free(t->table);
-  free(t);
+void destroy(HashTable** t){
+  for(int i = 0; i < (*t)->m; i++){
+    if((*t)->table[i].ocupied == FULL)
+      free((*t)->table[i].word);
+  }
+  (*t)->n = 0;
+  (*t)->m = 0;
+  free((*t)->table);
+  free(*t);
 }
 
 void exibir(HashTable* t){
