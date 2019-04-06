@@ -285,6 +285,9 @@ int* eulerCycle(graph* g, int* error){
 	findEulerCycle(g, 0, 0, path, isBridge, error);
 
 	free(visited);
+	for(int i = 0; i < g->numVertices; i++)
+		free(isBridge[i]);
+	free(isBridge);
 	return path;
 }
 
