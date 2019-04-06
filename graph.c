@@ -1,295 +1,135 @@
 #include "graph.h"
+#include "hash.h"
+#include <math.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
-int min(int a, int b) {
-	return a < b ? a : b;
+int max(int a, int b){
+  return -min(-a, -b);
 }
 
-int noError() {	return 0; }
+double jacquard(int *n, graph *g1, graph *g2){
+  double intersection = 0.0, Union = 0.0;
+  for(int i = 0; i < *n; ++i)
+    for(int j = 0; j < *n; ++j){
+      Union += max(g1->edges[i][j], g2->edges[i][j]);
+      intersection += min(g1->edges[i][j], g2->edges[i][j]);
+    }
 
-/*----------------------------------------------------------*/
-/*	Create graph 	*/
-graph* createGraph(int* n, int* dir, int* wei, int* error) {
-	if((*n) >= MAXV || (*n) < 0) {
-		*error = 1;
-		return NULL;
-	}
-
-	graph* g = (graph*)calloc(sizeof(graph), 1);
-
-	if(g == NULL) return NULL;
-
-	g->numEdges = 0;
-	g->numVertices = *n;
-	g->directed = *dir;
-	g->weighted = *wei;
-
-	for(int i = 0; i < (*n); i++) {
-		for(int j = 0; j < (*n); j++) {
-			g->edges[i][j] = noEdge;
-		}
-	}
-
-	*error = noError();
-	return g;
+  return intersection/Union;
 }
 
-void printEdges(graph* g){
-	for(int i = 0; i < g->numVertices; i++) {
-		for(int j = 0; j < g->numVertices; j++) {
-			printf("%d ", g->edges[i][j]);
-		}
-		printf("\n");
-	}
-	printf("\n");
-	return;
+double cossine(int *n, graph *g1, graph *g2){
+  double dotprod = 0.0, length1 = 0.0, length2 = 0.0;
+  for(int i = 0; i < *n; ++i)
+    for(int j = 0; j < *n; ++j){
+      dotprod += g1->edges[i][j]*g2->edges[i][j];
+      length1 += g1->edges[i][j]*g1->edges[i][j];
+      length2 += g2->edges[i][j]*g2->edges[i][j];
+    }
+
+  return dotprod/(sqrt(length1)*sqrt(length2));
 }
 
-/*----------------------------------------------------------*/
-/*	Insert edge in g from one vertex to another with a certain weight 	*/
-void insertEdge(graph* g, int* from, int* to, elem* weight, int* error) {
-	if(!g->weighted) *weight = 1;
-	g->edges[*from][*to] = *weight;
-	g->numEdges++;
-	if(!g->directed) g->edges[*to][*from] = *weight;
+//Parse string by end
+//@return parsed string
+char* parse(char* str, int *pos, char end, int* length){
+	char* parsed = calloc(strlen(str), sizeof(char));
+  *length = 0;
 
-	*error = noError();
-	return;
-}
+  while(str[*pos] != end && str[*pos] != '\0'){
+    parsed[*length] = str[*pos];
+    (*pos)+=1; (*length)+=1;
+  }
 
-/*----------------------------------------------------------*/
-/*	Remove edge in g from one vertex to another 	*/
-void removeEdge(graph* g, int* from, int* to, int* error) {
-		if(*from < 0 || *to < 0 || *from >= g->numVertices || *to >= g->numVertices) {
-		*error = 1;
-		return;
-	}
-
-	if(g->edges[*to][*from] == noEdge){
-		*error = 2;
-		return;
-	}
-
-	g->edges[*from][*to] = noEdge;
-	g->edges[*to][*from] = noEdge;
-	*error = noError();
-	return;
-}
-
-/*----------------------------------------------------------*/
-/*	Transpose graph 	*/
-graph* traspose(graph* g, int* error){
-
-	graph* new = createGraph(&g->numVertices, &g->directed, &g->weighted, error);
-
-	if(*error) return NULL;
-
-	for(int i = 0; i < g->numVertices; i++) {
-		for(int j = 0; j < g->numVertices; j++) {
-			new->edges[i][j] = g->edges[j][i];
-		}
-	}
-
-	*error = noError();
-	return new;
-}
-
-
-/*----------------------------------------------------------*/
-/*	Calculates the degree of a vertex 	*/
-int degree(graph* g, int* v, int* error) {
-
-	int degree = 0;
-	for(int i = 0; i < g->numVertices; i++) {
-		if(g->edges[*v][i] != noEdge) degree++;
-	}
-
-	return degree;
-}
-
-/*----------------------------------------------------------*/
-/* 	Return weather a vertex has neighboors*/
-int noNeighboor(graph* g, int *v, int* error){
-
-	if(*v >= g->numVertices) {
-		*error = 1;
-		return 1;
-	}
-
-	*error = 0;
-	return (degree(g, v, error) == 0);
+  parsed[*length] = '\0';
+  return parsed;
 
 }
 
-/*----------------------------------------------------------*/
-/*	 Return the first neighboor of a vertex 	*/
-int firstNeighboor(graph* g, int *v, int* error){
+/*
+guarda CN, V -> substantivo e verbo
+*/
+int* TextToNumbers(char *str, int* text_size, HashTable** t){
+	int length = strlen(str);
+  int parsed_len = 0;
+  char* parsed;
+  int intoHash = 0, error = 0;
 
-	if(*v >= g->numVertices) {
-		*error = 1;
-		return 1;
+  int* text = calloc((*t)->m, sizeof(int));
+  *text_size = 0;
+
+	for(int i = 0; i < length; i++){
+    parsed = parse(str, &i, ' ', &parsed_len); //Divide por espaco
+    int pos = i - parsed_len;
+    for(int j = i; j >= pos; j--){
+      if(str[j] == '/'){ //Encontrar '/'
+        //A palavra e' um verbo ou substantivo?
+        if(str[j+1] == 'V' || (str[j+1] == 'C' && str[j+2] == 'N')){
+          //Gravar palavra
+          int k = j-1, parsed_len = 0;
+          while(k >= pos && str[k] != '/' && str[k] != ' '){
+            parsed[parsed_len] = str[k];
+            k--; parsed_len++;
+          }
+          parsed[parsed_len] = '\0';
+          int parsed_num = insert(t, parsed, &error);
+          text[*text_size] = parsed_num;
+          *text_size += 1;
+          if(error == 1){
+            intoHash = 0;
+            error = 0;
+          } else intoHash = 1;
+        }
+        break;
+      }
+    }
+    if(!intoHash) free(parsed);
+    intoHash = 0;
 	}
 
-	*error = 0;
-	int first = -1;
-	for(int i = 0; i < g->numVertices; i++) {
-		if(g->edges[*v][i]) {
-			first = i;
-			break;
-		}
-	}
-	return first;
+  return text;
+
 }
 
-/*----------------------------------------------------------*/
-/*	 go to the next neighboor 	*/
-void nextNeighboor(graph* g, int* v, int* adj, elem* p, int* next, int* endList, int* error) {
-
-	if(*v >= g->numVertices) {
-		*error = 1;
-		return;
-	}
-
-	*error = 0;
-	*adj = *next;
-	*p = g->edges[*v][*next];
-	(*next)++;
-
-	while(*next < g->numVertices && (g->edges[*v][*next] == noEdge)) (*next)++;
-	if(*next >= g->numVertices) *endList = 1;
+void TextToGraph(int* text, int size, graph** g){
+  int error = 0, aux = 0;
+  for(int i = 0; i < size-1; ++i){
+    aux = (*g)->edges[i][i+1] + 1;
+    insertEdge(*g, &text[i], &text[i+1], &aux, &error);
+  }
 }
 
-/* 	Return the id of the least weighted edge   */
-int leastWeightedEdge(graph* g, int* u, int* v, int* error) {
-
-	int min = -0x3f3f3f3f;
-
-	for(int i = 0; i < g->numVertices; i++) {
-		for(int j = 0; j < g->numVertices; j++) {
-			if(g->edges[i][j] != noEdge && g->edges[i][j] < min) {
-				*u = i;
-				*v = j;
-				min = g->edges[i][j];
-			}
-		}
-	}
-
-	return min;
-}
+int main(){
+  graph *G1, *G2;
+  int edges_one, edges_two, u, v;
+  int one = 1, error = 0;
 
 
-void dfs(graph* g, int u, int* visited){
-	visited[u] = 1;
-	for(int i = 0; i < g->numVertices; i++)
-		if(g->edges[u][i] && !visited[i])
-			dfs(g, i, visited);
-	return;
-}
+  char* str1 = "<p><s> eu/PRS#gs1 visitei/VISITAR/V#ppi-1s sua/POSS#fs tia/TIO/CN#fs";
+  char* str2 = "<p><s> eu/PRS#gs1 visitei/VISITAR/V#ppi-1s sua/POSS#fs tia/TIO/CN#fs comi/COMER/V#blabha maca/CN";
 
-void tarjan(graph* g, int u, int* visited, int* low, int* time, int** isBridge, int* t, int p) {
-	time[u] = (*t)++;
-	low[u] = time[u];
-	visited[u] = 1;
+  HashTable* t = createHash();
 
-	for(int i = 0; i < g->numVertices; i++) {
-		if(i == p) continue;
+  int size1 = 0, size2 = 0;
+  int* text1 = TextToNumbers(str1, &size1, &t);
+  int* text2 = TextToNumbers(str2, &size2, &t);
 
-		if(g->edges[u][i] && !visited[i]) {
-			tarjan(g, i, visited, low, time, isBridge, t, u);
-			low[u] = min(low[u], low[i]);
+  G1 = createGraph(&t->n, &one, &one, &error);
+  G2 = createGraph(&t->n, &one, &one, &error);
 
-			if(low[i] > time[u]) {
-				isBridge[u][i] = 1;
-				isBridge[i][u] = 1;
-			}
+  TextToGraph(text1, size1, &G1);
+  TextToGraph(text2, size2, &G2);
 
-		} else if(g->edges[u][i]) {
-			low[u] = min(low[u], time[i]);
-		}
-	}
+  double sim = cossine(&t->n, G1, G2);
 
-	return;
-}
+  printf("%.2lf%%\n", sim*100);
 
-int hasCycle(graph* g, int* error) {
-
-	for(int i = 0; i < g->numVertices; i++) {
-		int deg = degree(g, &i, error);
-		if(deg & 1 || !deg) {
-			return 0;
-		}
-	}
-
-	return 1;
-}
-
-void findBridges(graph* g, int** isBridge){
-	int *low, *time, *visited, t = 0, zero = 0;
-	low = calloc(g->numVertices, sizeof(int));
-	time = calloc(g->numVertices, sizeof(int));
-	visited = calloc(g->numVertices, sizeof(int));
-
-	tarjan(g, 0, visited, low, time, isBridge, &zero, -1);
-	free(low);
-	free(time);
-	free(visited);
-}
-
-void findEulerCycle(graph* g, int u, int size, int* path, int** isBridge, int* error) {
-	if(degree(g, &u, error) == 1){
-		path[size] = u;
-		int i = firstNeighboor(g, &u, error);
-		removeEdge(g, &u, &i, error);
-		findBridges(g, isBridge);
-		findEulerCycle(g, i, size+1, path, isBridge, error);
-		return;
-	} else {
-		for(int i = 0; i < g->numVertices; i++) {
-			if(g->edges[u][i] && !isBridge[u][i]) {
-				path[size] = u;
-				removeEdge(g, &u, &i, error);
-				findBridges(g, isBridge);
-				findEulerCycle(g, i, size+1, path, isBridge, error);
-				return;
-			}
-		}
-	}
-	return;
-}
-
-int* eulerCycle(graph* g, int* error){
-
-	if(!hasCycle(g, error)) return NULL;
-
-	int* visited = calloc(g->numVertices, sizeof(int));
-	int** isBridge = calloc(g->numVertices, sizeof(int*));
-
-	for(int i = 0; i < g->numVertices; i++) {
-		isBridge[i] = calloc(g->numVertices, sizeof(int));
-	}
-	findBridges(g, isBridge);
-
-	// for(int i = 0; i < g->numVertices; i++) {
-	// 	for(int j = 0; j < g->numVertices; j++) {
-	// 		printf("%d ", isBridge[i][j]);
-	// 	}
-	// 	printf("\n");
-	// }
-	// printf("\n");
-	dfs(g, 0, visited);
-	for(int i = 0; i < g->numVertices; i++) {
-		if(!visited[i]) return NULL;
-	}
-
-	int* path = calloc(g->numEdges+1, sizeof(int));
-	findEulerCycle(g, 0, 0, path, isBridge, error);
-
-	free(visited);
-	return path;
-}
-
-void destroyGraph(graph* g, int* error){
-	if(g != NULL) free(g);
-	*error = noError();
-	return;
+  destroy(&t);
+  destroyGraph(G1, &error);
+  destroyGraph(G2, &error);
+  free(text1);
+  free(text2);
+  return 0;
 }
