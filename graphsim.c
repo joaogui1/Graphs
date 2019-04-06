@@ -9,10 +9,6 @@ int max(int a, int b){
   return (a > b)?a:b;
 }
 
-int min(int a, int b){
-  return (a < b)?a:b;
-}
-
 double jacquard(int *n, graph *g1, graph *g2){
   double intersection = 0.0, Union = 0.0;
   for(int i = 0; i < *n; ++i)

@@ -16,7 +16,7 @@ typedef struct _graph {
 	int directed;
 } graph;
 
-
+int min(int a, int b);
 graph* createGraph(int* n, int* dir, int* wei, int* error);
 void destroyGraph(graph* g, int* error);
 void insertEdge(graph* g, int* from, int* to, elem* weight, int* error);
