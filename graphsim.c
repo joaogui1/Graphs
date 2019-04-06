@@ -6,7 +6,11 @@
 #include <string.h>
 
 int max(int a, int b){
-  return -min(-a, -b);
+  return (a > b)?a:b;
+}
+
+int min(int a, int b){
+  return (a < b)?a:b;
 }
 
 double jacquard(int *n, graph *g1, graph *g2){
