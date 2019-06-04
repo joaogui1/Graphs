@@ -1,6 +1,5 @@
 // todo:
 //      traduzir e colocar memes
-//      flow -> como fugir da inimiga (mincut) // tambem sugere amizade
 //      armazenar dados
 
 #include <stdio.h>
@@ -24,7 +23,8 @@ void printMenu() {
     printf("9 - See how far you are from someone\n");
     printf("10 - See everyone's distance\n");
     printf("11 - Como chegar no crush\n");
-    printf("12 - See advanced options\n");
+    printf("12 - Causar intriga\n");
+    printf("13 - See advanced options\n");
     printf("0 - Exit\n");
     printf("-----------------------------\n\n");
     return;
@@ -130,6 +130,11 @@ int main() {
             getPrevious(net, pos, pos2);
 
         } else if (op == 12) {
+            if(getProfile(net, &pos, 1) == false) continue;
+            if(getProfile(net, &pos2, 2) == false) continue;
+            getInimiga(net, pos, pos2);
+
+        } else if (op == 13) {
             advancedOptions(net);
 
         } else if (op != 0) {

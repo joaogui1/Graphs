@@ -115,7 +115,7 @@ void bfs(Graph* g, int source) {
         g->visited[u] = black;
     }
 
-    return;    
+    return;
 }
 
 void floydWarshall(Graph* g) {
@@ -138,6 +138,89 @@ void floydWarshall(Graph* g) {
     }
 
     return;
+}
+
+void fillRes(Graph* g) {
+    for(int i = 0; i < g->currSize; i++) {
+        for(int j = 0; j < g->currSize; j++) {
+            g->res[i][j] = g->edges[i][j].proximity;
+        }
+    }
+    return;
+}
+
+void bfsFlow(Graph* g, int source, int sink) {
+    // for(int i = 0; i < g->currSize; i++) {
+    //     for(int j = 0; j < g->currSize; j++) {
+    //         printf("%d\t", g->res[i][j]);
+    //     }
+    //     printf("\n");
+    // }
+    // printf("\n\n");
+    
+    memset(g->visited, white, maxSize);
+    memset(g->prev, -1, maxSize);
+
+    Queue* q = createQueue();
+
+    insertQueue(q, source, 0);
+    g->distance[source][source] = 0;
+
+    while (!isEmptyQueue(q)) {
+        Pair p = popQueue(q);
+        
+        int u = p.first;
+        int w = p.second;
+
+        if(u == sink) break;
+
+        for(int i = 0; i < g->currSize; i++) {
+            if(g->edges[i][u].relation == friends && g->visited[i] == white && g->res[u][i] > 0) {
+                insertQueue(q, i, w + 1);
+                g->prev[i] = u;
+                g->visited[i] = gray;
+            }
+        }
+
+        g->visited[u] = black;
+    }
+
+    return;    
+}
+
+void augment(Graph* g, int currId, int minEdge, int source, int* flow) {
+    if(currId == source) {
+        (*flow) = minEdge;
+        return;
+    } else if (g->prev[currId] != -1) {
+        int prev = g->prev[currId];
+        int newMin = min(minEdge, g->res[g->prev[currId]][currId]);
+
+        augment(g, prev, newMin, source, flow);
+
+        g->res[g->prev[currId]][currId] -= (*flow);
+        g->res[currId][g->prev[currId]] += (*flow);
+    }
+    
+    return;
+}
+
+int edmondKarps(Graph* g, int pos, int pos2) {
+    int maxFlow = 0;
+    int flow = 0;
+    fillRes(g);
+
+    while(true) {
+        flow = 0;
+
+        bfsFlow(g, pos, pos2);
+        augment(g, pos2, oo, pos, &flow);
+        
+        if(flow == 0) break;
+        maxFlow += flow;
+    }
+
+    return maxFlow;
 }
 
 int degreeIn(Graph* g, int vertex, int* error) {

@@ -225,3 +225,23 @@ void printFriends(Net* net, int pos) {
         }
     }
 }
+
+void getInimiga(Net* net, int pos, int pos2) {
+    bool found = false;
+    edmondKarps(net->conexions, pos, pos2);
+
+    for(int i = 0; i < net->size; i++) {
+        for(int j = 0; j < net->size; j++) {
+            if(i != j && net->conexions->res[j][i] <= 0) {
+                if(found == false) {
+                    printf("As pessoas que tem que brigar são: \n");
+                    found = true;
+                }
+                
+                printf("%s -> %s\n", net->profiles[i].name, net->profiles[j].name);
+            }
+        }
+    }
+
+    if(found == false) printf("Me ajuda a te ajudar\n");
+}

@@ -26,6 +26,7 @@ typedef struct _graph {
     int visited[maxSize];
     int distance[maxSize][maxSize];
     int prev[maxSize];
+    int res[maxSize][maxSize];
     Edge edges[maxSize][maxSize];
 } Graph;
 
@@ -38,6 +39,8 @@ void removeEdgeMatrix(Graph* g, int from, int to, int* error);
 void addEdgeMatrix(Graph* g, int from, int to, int proximity, int* error);
 void printMatrix(Graph* g, int debug);
 void bfs(Graph* g, int source);
+void flow(Graph* g);
 void floydWarshall(Graph* g);
+int edmondKarps(Graph* g, int pos, int pos2);
 
 #endif
