@@ -25,5 +25,7 @@ void changeTreshold(Net* net);
 void getDistance(Net* net, int pos, int pos2);
 void getAllDistances(Net* net);
 void printMat(int** mat, int size);
+void getPrevious(Net* net, int pos, int pos2);
+void printFriends(Net* net, int pos2);
 
 #endif

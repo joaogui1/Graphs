@@ -7,25 +7,34 @@
 Profile createProfile() {
     Profile profile;
 
-    printf("Insert your data: \n");
+    printf("Insira seus dados: \n");
     
-    printf("Name: ");
+    printf("Nome: ");
     scanf(" %[^\r\n]", profile.name);
     
-    printf("Age: ");
-    scanf("%d", &profile.age);
+    // printf("Idade: ");
+    // scanf("%d", &profile.age);
 
-    printf("City: ");
-    scanf(" %[^\r\n]", profile.city);
+    // printf("Cidade: ");
+    // scanf(" %[^\r\n]", profile.city);
 
-    printf("Favorite movie: ");
-    scanf(" %[^\r\n]", profile.movie);
+    // printf("Filme preferido: ");
+    // scanf(" %[^\r\n]", profile.movie);
 
-    printf("Team: ");
-    scanf(" %[^\r\n]", profile.team);
+    // printf("Comida preferida: ");
+    // scanf(" %[^\r\n]", profile.food);
 
-    printf("Favorite color: ");
-    scanf(" %[^\r\n]", profile.color);
+    // printf("Paper preferido: ");
+    // scanf(" %[^\r\n]", profile.paper);
+
+    // printf("Algoritmo de grafos preferido: ");
+    // scanf(" %[^\r\n]", profile.algorithm);
+
+    // printf("Vingador preferido: ");
+    // scanf(" %[^\r\n]", profile.avenger);
+
+    // printf("Melhor time e pq São Caetano: ");
+    // scanf(" %[^\r\n]", profile.best);
 
     return profile;
 }
@@ -38,12 +47,15 @@ void printNames(Profile* profiles, int size) {
 }
 
 void printProfile(Profile profile) {
-    printf("Name: %s\n", profile.name);
-    printf("Age: %d\n", profile.age);
-    printf("City: %s\n", profile.city);
-    printf("Favorite Movie: %s\n", profile.movie);
-    printf("Team: %s\n", profile.team);
-    printf("Favorite Color: %s\n", profile.color);
+    printf("Nome: %s\n", profile.name);
+    printf("Idade: %d\n", profile.age);
+    printf("Cidade: %s\n", profile.city);
+    printf("Filme preferido: %s\n", profile.movie);
+    printf("Comida preferida: %s\n", profile.food);
+    printf("Paper preferido: %s\n", profile.paper);
+    printf("Algoritmo de grafos preferido: %s\n", profile.algorithm);
+    printf("Vingador preferido: %s\n", profile.avenger);
+    printf("Melhor time: São Caetano\n");
     
     return;
 }
@@ -71,8 +83,11 @@ int getProximity(Profile this, Profile that) {
     if (!strcmp(this.name, that.name)) ret += nameWeight;
     if (!strcmp(this.city, that.city)) ret += cityWeight;
     if (!strcmp(this.movie, that.movie)) ret += movieWeight;
-    if (!strcmp(this.team, that.team)) ret += teamWeight;
-    if (!strcmp(this.color, that.color)) ret += colorWeight;
+    if (!strcmp(this.food, that.food)) ret += foodWeight;
+    if (!strcmp(this.paper, that.paper)) ret += paperWeight;
+    if (!strcmp(this.algorithm, that.algorithm)) ret += algorithmWeight;
+    if (!strcmp(this.avenger, that.avenger)) ret += avengerWeight;
+    if (!strcmp(this.best, that.best)) ret += bestWeight;
     if (this.age == that.age) ret += ageWeight;
     
     return ret;

@@ -90,6 +90,7 @@ void removeEdgeMatrix(Graph* g, int from, int to, int* error) {
 void bfs(Graph* g, int source) {
     memset(g->distance, -1, maxSize*maxSize);
     memset(g->visited, white, maxSize);
+    memset(g->prev, -1, maxSize);
 
     Queue* q = createQueue();
 
@@ -105,6 +106,7 @@ void bfs(Graph* g, int source) {
         for(int i = 0; i < g->currSize; i++) {
             if(g->edges[i][u].relation == friends && g->visited[i] == white) {
                 insertQueue(q, i, w + 1);
+                g->prev[i] = u;
                 g->distance[source][i] = w + 1;
                 g->visited[i] = gray;
             }

@@ -2,19 +2,25 @@
 #define PROFILE_H
 
 #define nameWeight 1
-#define cityWeight 2
-#define movieWeight 3
-#define teamWeight 3
-#define colorWeight 2
-#define ageWeight 1
+#define ageWeight 3
+#define cityWeight 5
+#define movieWeight 6
+#define foodWeight 3
+#define paperWeight 8
+#define algorithmWeight 7
+#define avengerWeight 4
+#define bestWeight 10
 
 typedef struct _profile {
     char name[300];
     int age;
     char city[300];
     char movie[300];
-    char team[300];
-    char color[300];
+    char food[300];
+    char paper[300];
+    char algorithm[300];
+    char avenger[300];
+    char best[300];
 } Profile;
 
 Profile createProfile();

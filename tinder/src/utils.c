@@ -9,7 +9,7 @@ Net* initNet() {
     Net* net = calloc(1, sizeof(Net));
     net->conexions = createGraphMatrix(&error);
     net->size = 0;
-    net->treshold = 3;
+    net->treshold = 7;
     if(error) return NULL;
     return net;
 }
@@ -193,5 +193,35 @@ void getAllDistances(Net* net) {
             else printf("%d\t", net->conexions->distance[i][j]);
         }
         printf("\n");
+    }
+}
+
+void getPrevious(Net* net, int pos, int pos2) {
+    bfs(net->conexions, pos2);
+    int currId = pos;
+    Profile path[maxSize];
+
+    while (net->conexions->prev[currId] != -1) {
+        if(currId == pos) printf("\nO caminho para o crush é:");
+        currId = net->conexions->prev[currId];
+        printf("\n");
+        printProfile(net->profiles[currId]);
+    }
+
+    if(currId == pos) {
+        printf("\nNão dá pra chegar chegando. Fala com um dos amigxs delx\n");
+        printFriends(net, pos2);
+    }
+
+    return;
+}
+
+void printFriends(Net* net, int pos) {
+    for (int i = 0; i < net->size; i++) {
+        if (net->conexions->edges[pos][i].relation == friends) {
+            printf("\n");
+            printProfile(net->profiles[i]);
+            printf("\n");
+        }
     }
 }

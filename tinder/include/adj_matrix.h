@@ -25,6 +25,7 @@ typedef struct _graph {
     int currSize;
     int visited[maxSize];
     int distance[maxSize][maxSize];
+    int prev[maxSize];
     Edge edges[maxSize][maxSize];
 } Graph;
 
