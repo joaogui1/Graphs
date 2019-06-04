@@ -150,14 +150,6 @@ void fillRes(Graph* g) {
 }
 
 void bfsFlow(Graph* g, int source, int sink) {
-    // for(int i = 0; i < g->currSize; i++) {
-    //     for(int j = 0; j < g->currSize; j++) {
-    //         printf("%d\t", g->res[i][j]);
-    //     }
-    //     printf("\n");
-    // }
-    // printf("\n\n");
-    
     memset(g->visited, white, maxSize);
     memset(g->prev, -1, maxSize);
 
@@ -188,38 +180,37 @@ void bfsFlow(Graph* g, int source, int sink) {
     return;    
 }
 
-void augment(Graph* g, int currId, int minEdge, int source, int* flow) {
+int augment(Graph* g, int currId, int minEdge, int source) {
+    int flow = 0;
+
     if(currId == source) {
-        (*flow) = minEdge;
-        return;
+        return minEdge;
+        
     } else if (g->prev[currId] != -1) {
         int prev = g->prev[currId];
-        int newMin = min(minEdge, g->res[g->prev[currId]][currId]);
+        int newMin = min(minEdge, g->res[prev][currId]);
 
-        augment(g, prev, newMin, source, flow);
+        flow = augment(g, prev, newMin, source);
 
-        g->res[g->prev[currId]][currId] -= (*flow);
-        g->res[currId][g->prev[currId]] += (*flow);
+        g->res[prev][currId] -= flow;
+        g->res[currId][prev] += flow;
     }
     
-    return;
+    return flow;
 }
 
 int edmondKarps(Graph* g, int pos, int pos2) {
     int maxFlow = 0;
-    int flow = 0;
     fillRes(g);
 
     while(true) {
-        flow = 0;
-
         bfsFlow(g, pos, pos2);
-        augment(g, pos2, oo, pos, &flow);
+        int flow = augment(g, pos2, oo, pos);
         
         if(flow == 0) break;
         maxFlow += flow;
     }
-
+    
     return maxFlow;
 }
 

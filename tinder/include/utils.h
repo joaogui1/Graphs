@@ -27,6 +27,6 @@ void getAllDistances(Net* net);
 void printMat(int** mat, int size);
 void getPrevious(Net* net, int pos, int pos2);
 void printFriends(Net* net, int pos2);
-void getInimiga(Net* net, int pos, int pos2);
+void minCut(Net* net, int pos, int pos2);
 
 #endif

@@ -42,5 +42,6 @@ void bfs(Graph* g, int source);
 void flow(Graph* g);
 void floydWarshall(Graph* g);
 int edmondKarps(Graph* g, int pos, int pos2);
+void bfsFlow(Graph* g, int source, int sink);
 
 #endif

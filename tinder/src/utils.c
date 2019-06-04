@@ -226,13 +226,12 @@ void printFriends(Net* net, int pos) {
     }
 }
 
-void getInimiga(Net* net, int pos, int pos2) {
+void printMinCut(Net* net) {
     bool found = false;
-    edmondKarps(net->conexions, pos, pos2);
-
+    
     for(int i = 0; i < net->size; i++) {
-        for(int j = 0; j < net->size; j++) {
-            if(i != j && net->conexions->res[j][i] <= 0) {
+        for(int j = i + 1; j < net->size; j++) {
+            if(net->conexions->edges[i][j].relation == friends && net->conexions->visited[i] != net->conexions->visited[j]) {
                 if(found == false) {
                     printf("As pessoas que tem que brigar são: \n");
                     found = true;
@@ -244,4 +243,10 @@ void getInimiga(Net* net, int pos, int pos2) {
     }
 
     if(found == false) printf("Me ajuda a te ajudar\n");
+}
+
+void minCut(Net* net, int pos, int pos2) {
+    edmondKarps(net->conexions, pos, pos2);
+    bfsFlow(net->conexions, pos, pos2);
+    printMinCut(net);
 }

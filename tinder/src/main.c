@@ -132,7 +132,7 @@ int main() {
         } else if (op == 12) {
             if(getProfile(net, &pos, 1) == false) continue;
             if(getProfile(net, &pos2, 2) == false) continue;
-            getInimiga(net, pos, pos2);
+            minCut(net, pos, pos2);
 
         } else if (op == 13) {
             advancedOptions(net);
