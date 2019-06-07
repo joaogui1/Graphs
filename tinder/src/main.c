@@ -8,6 +8,7 @@
 #include <string.h>
 #include "utils.h"
 #include "adj_matrix.h"
+#include "csv.h"
 
 void printMenu() {
     printf("\n-----------------------------\n");
@@ -58,7 +59,8 @@ void advancedOptions(Net* net) {
 }
 
 int main() {
-    
+    teste();
+    return 0;
     system("clear");
     printf("__          __  _                            \n");
     printf("\\ \\        / / | |                         \n");
