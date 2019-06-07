@@ -59,8 +59,6 @@ void advancedOptions(Net* net) {
 }
 
 int main() {
-    teste();
-    return 0;
     system("clear");
     printf("__          __  _                            \n");
     printf("\\ \\        / / | |                         \n");

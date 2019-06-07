@@ -11,7 +11,7 @@
 //Parse string by end, '\0' and '\n'
 //@return parsed string
 char* parse(char* str, int *pos, char end, int* length){
-	char* parsed = calloc(100000, sizeof(char));
+	char* parsed = calloc(12000, sizeof(char));
     *length = 0;
 
     while(str[*pos] != end && str[*pos] != '\0' && str[*pos] != '\n'){
@@ -85,7 +85,8 @@ int readCSV(CSVFile* file, const char* fileName){
             return 0;
         }
     } while(size != 0);
-    
+    free(call);
+
     //file->metadados = (char**) realloc(file->metadados, sizeof(char*) * numColumns);
     file->numColumns = numColumns;
 
@@ -106,6 +107,7 @@ int readCSV(CSVFile* file, const char* fileName){
             free(buffer2);
         }
         numLines++;
+        free(call);
     }
     //file->values = (char***) realloc(file->values, sizeof(char**) * numLines);
     file->numLines = numLines;
@@ -155,6 +157,26 @@ int writeCSV(CSVFile* file, const char* fileName){
     return file->numLines;
 }
 
+void DestroyCSV(CSVFile* file){
+    if(file == NULL) return;
+    if(file->metadados != NULL){
+        for(int i = 0; i < file->numColumns; i++)
+            free(file->metadados[i]);
+        free(file->metadados);
+    }
+
+    if(file->values != NULL){
+        for(int i = 0; i < file->numLines; i++){
+            for(int j = 0; j < file->numColumns; j++){
+                free(file->values[i][j]);
+            }
+            free(file->values[i]);
+        }
+        free(file->values);
+    }
+    free(file);
+}
+
 int teste(){
     CSVFile* file = new_CSVFile();
     readCSV(file, "resources/teste.csv");
@@ -172,6 +194,8 @@ int teste(){
     }
 
     writeCSV(file, "resources/copia_teste.csv");
+    DestroyCSV(file);
+
 
     return 0;
 }
