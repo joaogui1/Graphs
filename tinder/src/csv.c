@@ -1,6 +1,7 @@
 
 #include "csv.h"
 #include "adj_matrix.h"
+#include "profile.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -55,6 +56,10 @@ CSVFile* new_CSVFile(){
  *  - n -> Numero de usuarios
 */
 int readCSV(CSVFile* file, const char* fileName){
+    if(file == NULL){
+        printf("Veio null pra mim aqui rapa!\n");
+        return 0;
+    } 
     char buffer[1200];
     int size = 0;
     int pos = 0;
@@ -67,14 +72,14 @@ int readCSV(CSVFile* file, const char* fileName){
         printf("Erro ao carregar arquivo de dados\n");
         return 0;
     }
-
     file->metadados = (char**) calloc(MAXDATA, sizeof(char*));
 
     char* call = fgets(buffer, 12000, fp);
-    
+    char* buffer2;
+
     size = strlen(call);
     do{
-        char* buffer2 = parse(call, &pos, ',', &size);
+        buffer2 = parse(call, &pos, ',', &size);
         if(size == 0) break;
         file->metadados[numColumns] = (char*) calloc(size+1, sizeof(char));
         strncpy(file->metadados[numColumns], buffer2, size+1);
@@ -82,10 +87,11 @@ int readCSV(CSVFile* file, const char* fileName){
 
         numColumns++;
         if(numColumns > MAXDATA){
+            printf("Excedeu aqui\n");
             return 0;
         }
     } while(size != 0);
-    free(call);
+    //free(call); --> crasha...
 
     //file->metadados = (char**) realloc(file->metadados, sizeof(char*) * numColumns);
     file->numColumns = numColumns;
@@ -100,18 +106,17 @@ int readCSV(CSVFile* file, const char* fileName){
         pos = 0;
         file->values[numLines] = (char**) calloc(numColumns, sizeof(char*));
         for(int i = 0; i < numColumns; i++){
-            char* buffer2 = parse(call, &pos, ',', &size);
+            buffer2 = parse(call, &pos, ',', &size);
             
             file->values[numLines][i] = (char*) calloc(size+1, sizeof(char));
             strncpy(file->values[numLines][i], buffer2, size+1);
             free(buffer2);
         }
         numLines++;
-        free(call);
+        //free(call); --> crasha...
     }
     //file->values = (char***) realloc(file->values, sizeof(char**) * numLines);
     file->numLines = numLines;
-
     fclose(fp);
     return numLines;
 }
@@ -135,21 +140,25 @@ int writeCSV(CSVFile* file, const char* fileName){
         printf("Erro ao carregar arquivo de dados\n");
         return 0;
     }
-    
 
     int n = file->numColumns;
     char coma = ',';
+    char slash_n = '\n';
 
     for(int i = 0; i < n; i++){
+        //printf("%s %ld\n", file->metadados[i], strlen(file->metadados[i]));
         fwrite(file->metadados[i], strlen(file->metadados[i]), 1, fp);
-        if(i != n-1) fwrite(&coma, 1, 1, fp); 
+        if(i != n-1) fwrite(&coma, 1, 1, fp);
+        else fwrite(&slash_n, 1, 1, fp);
     }
 
     int m = file->numLines;
     for(int i = 0; i < m; i++){
         for(int j = 0; j < n; j++){
+            //printf("%s %ld\n", file->values[i][j], strlen(file->values[i][j]));
             fwrite(file->values[i][j], strlen(file->values[i][j]), 1, fp);
             if(j != n-1) fwrite(&coma, 1, 1, fp);
+            else fwrite(&slash_n, 1, 1, fp);
         }
     }
 
@@ -175,6 +184,56 @@ void DestroyCSV(CSVFile* file){
         free(file->values);
     }
     free(file);
+}
+
+void setDefaultHeader(CSVFile* csv){
+    csv->metadados = (char**) calloc(MAXDATA, sizeof(char*));
+    for(int i = 0; i < MAXDATA; i++)
+        csv->metadados[i] = (char*) calloc(50, sizeof(char));
+    strncpy(csv->metadados[0], "Name", 5);
+    strncpy(csv->metadados[1], "Age", 4);
+    strncpy(csv->metadados[2], "City", 5);
+    strncpy(csv->metadados[3], "Movie", 6);
+    strncpy(csv->metadados[4], "Food", 5);
+    strncpy(csv->metadados[5], "Paper", 6);
+    strncpy(csv->metadados[6], "Algorithm", 10);
+    strncpy(csv->metadados[7], "Avenger", 8);
+    strncpy(csv->metadados[8], "Team", 5);
+
+    csv->numColumns = MAXDATA;
+}
+
+void addProfile(CSVFile* csv, Profile profile){
+    if(csv->numLines >= maxSize) return;
+
+
+    if(csv->numLines == 0) csv->values = (char***) malloc(sizeof(char**) * maxSize);
+
+    csv->values[csv->numLines] = calloc(csv->numColumns, sizeof(char*));
+    
+
+
+    csv->values[csv->numLines][0] = calloc(strlen(profile.name)+1, sizeof(char));
+    csv->values[csv->numLines][1] = calloc(300, sizeof(char));
+    csv->values[csv->numLines][2] = calloc(strlen(profile.city)+1, sizeof(char));
+    csv->values[csv->numLines][3] = calloc(strlen(profile.movie)+1, sizeof(char));
+    csv->values[csv->numLines][4] = calloc(strlen(profile.food)+1, sizeof(char));
+    csv->values[csv->numLines][5] = calloc(strlen(profile.paper)+1, sizeof(char));
+    csv->values[csv->numLines][6] = calloc(strlen(profile.algorithm)+1, sizeof(char));
+    csv->values[csv->numLines][7] = calloc(strlen(profile.avenger)+1, sizeof(char));
+    csv->values[csv->numLines][8] = calloc(strlen(profile.best)+1, sizeof(char));
+    
+    strncpy(csv->values[csv->numLines][0], profile.name, strlen(profile.name)+1);
+    sprintf(csv->values[csv->numLines][1], "%d", profile.age);
+    strncpy(csv->values[csv->numLines][2], profile.city, strlen(profile.city)+1);
+    strncpy(csv->values[csv->numLines][3], profile.movie, strlen(profile.movie)+1);
+    strncpy(csv->values[csv->numLines][4], profile.food, strlen(profile.food)+1);
+    strncpy(csv->values[csv->numLines][5], profile.paper, strlen(profile.paper)+1);
+    strncpy(csv->values[csv->numLines][6], profile.algorithm, strlen(profile.algorithm)+1);
+    strncpy(csv->values[csv->numLines][7], profile.avenger, strlen(profile.avenger)+1);
+    strncpy(csv->values[csv->numLines][8], profile.best, strlen(profile.best)+1);
+
+    csv->numLines++;
 }
 
 int teste(){

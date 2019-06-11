@@ -144,7 +144,10 @@ int main() {
 
     } while (op != 0);
 
+    insertNetworkCSV(net);
+    writeCSV(net->csv, pathway);
 
+    //DestroyCSV(net->csv);
     destroyGraphMatrix(net->conexions, &error);
     if (net != NULL) free(net);
 

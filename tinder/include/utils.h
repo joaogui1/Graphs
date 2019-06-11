@@ -3,12 +3,16 @@
 
 #include "adj_matrix.h"
 #include "profile.h"
+#include "csv.h"
+
+#define pathway "resources/users.csv"
 
 typedef struct _net {
     int treshold;
     int size;
     Profile profiles[maxSize];
     Graph* conexions;
+    CSVFile* csv;
 } Net;
 
 Net* initNet();
@@ -28,5 +32,6 @@ void printMat(int** mat, int size);
 void getPrevious(Net* net, int pos, int pos2);
 void printFriends(Net* net, int pos2);
 void minCut(Net* net, int pos, int pos2);
+void insertNetworkCSV(Net* net);
 
 #endif

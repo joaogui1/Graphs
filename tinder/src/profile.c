@@ -12,30 +12,45 @@ Profile createProfile() {
     printf("Nome: ");
     scanf(" %[^\r\n]", profile.name);
     
-    // printf("Idade: ");
-    // scanf("%d", &profile.age);
+    printf("Idade: ");
+    scanf("%d", &profile.age);
 
-    // printf("Cidade: ");
-    // scanf(" %[^\r\n]", profile.city);
+    printf("Cidade: ");
+    scanf(" %[^\r\n]", profile.city);
 
-    // printf("Filme preferido: ");
-    // scanf(" %[^\r\n]", profile.movie);
+    printf("Filme preferido: ");
+    scanf(" %[^\r\n]", profile.movie);
 
-    // printf("Comida preferida: ");
-    // scanf(" %[^\r\n]", profile.food);
+    printf("Comida preferida: ");
+    scanf(" %[^\r\n]", profile.food);
 
-    // printf("Paper preferido: ");
-    // scanf(" %[^\r\n]", profile.paper);
+    printf("Paper preferido: ");
+    scanf(" %[^\r\n]", profile.paper);
 
-    // printf("Algoritmo de grafos preferido: ");
-    // scanf(" %[^\r\n]", profile.algorithm);
+    printf("Algoritmo de grafos preferido: ");
+    scanf(" %[^\r\n]", profile.algorithm);
 
-    // printf("Vingador preferido: ");
-    // scanf(" %[^\r\n]", profile.avenger);
+    printf("Vingador preferido: ");
+    scanf(" %[^\r\n]", profile.avenger);
 
-    // printf("Melhor time e pq São Caetano: ");
-    // scanf(" %[^\r\n]", profile.best);
+    printf("Melhor time e pq São Caetano: ");
+    scanf(" %[^\r\n]", profile.best);
 
+    return profile;
+}
+
+Profile new_Profile(char** atributes){
+    Profile profile;
+    strncpy(profile.name, atributes[0], 300);
+    profile.age = atoi(atributes[1]);
+    //strncpy(profile.age, atributes[1], 300);
+    strncpy(profile.city, atributes[2], 300);
+    strncpy(profile.movie, atributes[3], 300);
+    strncpy(profile.food, atributes[4], 300);
+    strncpy(profile.paper, atributes[5], 300);
+    strncpy(profile.algorithm, atributes[6], 300);
+    strncpy(profile.avenger, atributes[7], 300);
+    strncpy(profile.best, atributes[8], 300);
     return profile;
 }
 
