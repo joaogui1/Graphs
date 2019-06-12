@@ -247,3 +247,46 @@ int degreeOut(Graph* g, int vertex, int* error) {
     *error = 0;
     return deg;
 }
+
+int convertToFile(Graph* g, char* filename){
+    if(g == NULL) return 0;
+
+    FILE* fp;
+    char slash_n = '\n';
+
+    if( !(fp = fopen(filename, "w")) ){
+        return 0;
+    }
+
+    fwrite(&g->currSize, sizeof(int), 1, fp);
+    fwrite(&slash_n, sizeof(char), 1, fp);
+
+    for(int i = 0; i < g->currSize; i++){
+        fwrite(g->edges[i], sizeof(Edge), g->currSize, fp);
+        fwrite(&slash_n, sizeof(char), 1, fp);
+    }
+
+    fclose(fp);
+    return 1;
+}
+
+int getFromFile(Graph* g, char* filename){
+    if(g == NULL) return 0;
+
+    FILE* fp;
+
+    if( !(fp = fopen(filename, "r")) ){
+        return 0;
+    }
+
+    fread(&g->currSize, sizeof(int), 1, fp);
+    fseek(fp, sizeof(char), SEEK_CUR);
+
+    for(int i = 0; i < g->currSize; i++){
+        fread(g->edges[i], sizeof(Edge), g->currSize, fp);
+        fseek(fp, sizeof(char), SEEK_CUR);
+    }
+
+    fclose(fp);
+    return 1;
+}

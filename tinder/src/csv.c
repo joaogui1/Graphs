@@ -57,7 +57,6 @@ CSVFile* new_CSVFile(){
 */
 int readCSV(CSVFile* file, const char* fileName){
     if(file == NULL){
-        printf("Veio null pra mim aqui rapa!\n");
         return 0;
     } 
     char buffer[1200];
@@ -69,7 +68,6 @@ int readCSV(CSVFile* file, const char* fileName){
     FILE* fp;
     
     if( !(fp = fopen(fileName, "r")) ){
-        printf("Erro ao carregar arquivo de dados\n");
         return 0;
     }
     file->metadados = (char**) calloc(MAXDATA, sizeof(char*));
@@ -87,7 +85,6 @@ int readCSV(CSVFile* file, const char* fileName){
 
         numColumns++;
         if(numColumns > MAXDATA){
-            printf("Excedeu aqui\n");
             return 0;
         }
     } while(size != 0);

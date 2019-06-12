@@ -1,6 +1,6 @@
 // todo:
 //      traduzir e colocar memes
-//      armazenar dados
+//      armazenar dados(matriz de adjacencia)
 
 #include <stdio.h>
 #include <stdbool.h>
@@ -145,9 +145,10 @@ int main() {
     } while (op != 0);
 
     insertNetworkCSV(net);
-    writeCSV(net->csv, pathway);
+    writeCSV(net->csv, csv_pathway);
+    convertToFile(net->conexions, matrix_pathway);
 
-    //DestroyCSV(net->csv);
+    DestroyCSV(net->csv);
     destroyGraphMatrix(net->conexions, &error);
     if (net != NULL) free(net);
 

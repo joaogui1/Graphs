@@ -6,7 +6,7 @@
 #include "csv.h"
 
 int getUsersCSV(Net* net){
-    int n = readCSV(net->csv, pathway);
+    int n = readCSV(net->csv, csv_pathway);
     if(net->csv->numColumns >= 9){
         for(int i = 0; i < n; i++){
             Profile profile = new_Profile(net->csv->values[i]);
@@ -25,9 +25,10 @@ Net* initNet() {
     
     net->csv = new_CSVFile();
     if(!getUsersCSV(net)){
-        printf("Setting default header...");
         setDefaultHeader(net->csv);
     } 
+
+    getFromFile(net->conexions, matrix_pathway);
 
     if(error) return NULL;
     return net;
