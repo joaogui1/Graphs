@@ -6,7 +6,7 @@
 #include "csv.h"
 
 #define csv_pathway "resources/users.csv"
-#define matrix_pathway "resources/conexions.txt"
+#define matrix_pathway "resources/conexions.hex"
 
 typedef struct _net {
     int treshold;
