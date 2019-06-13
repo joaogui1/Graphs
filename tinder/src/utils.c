@@ -191,7 +191,7 @@ void perfectMatch(Net* net, int pos) {
 
 void changeTreshold(Net* net) {
     int treshold;
-    printf("What's the new tresh hold?\n");
+    printf("What's the new treshold?\n");
     scanf("%d", &treshold);
     net->treshold = treshold;
 }
@@ -229,14 +229,14 @@ void getPrevious(Net* net, int pos, int pos2) {
     Profile path[maxSize];
 
     while (net->conexions->prev[currId] != -1) {
-        if(currId == pos) printf("\nO caminho para o crush é:");
+        if(currId == pos) printf("\nThe way to your crush is:");
         currId = net->conexions->prev[currId];
         printf("\n");
         printProfile(net->profiles[currId]);
     }
 
     if(currId == pos) {
-        printf("\nNão dá pra chegar chegando. Fala com um dos amigxs delx\n");
+        printf("\nYou can't rush in. Talk to one of their friends\n");
         printFriends(net, pos2);
     }
 
@@ -260,7 +260,7 @@ void printMinCut(Net* net) {
         for(int j = i + 1; j < net->size; j++) {
             if(net->conexions->edges[i][j].relation == friends && net->conexions->visited[i] != net->conexions->visited[j]) {
                 if(found == false) {
-                    printf("As pessoas que tem que brigar são: \n");
+                    printf("The people that must fight are: \n");
                     found = true;
                 }
                 
@@ -269,7 +269,7 @@ void printMinCut(Net* net) {
         }
     }
 
-    if(found == false) printf("Me ajuda a te ajudar\n");
+    if(found == false) printf("C'mon, help me to help you\n");
 }
 
 void minCut(Net* net, int pos, int pos2) {

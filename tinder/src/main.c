@@ -23,8 +23,8 @@ void printMenu() {
     printf("8 - Get perfect Match\n");
     printf("9 - See how far you are from someone\n");
     printf("10 - See everyone's distance\n");
-    printf("11 - Como chegar no crush\n");
-    printf("12 - Causar intriga\n");
+    printf("11 - How to get close to your crush\n");
+    printf("12 - Stop people from ever meeting\n");
     printf("13 - See advanced options\n");
     printf("0 - Exit\n");
     printf("-----------------------------\n\n");
@@ -34,7 +34,7 @@ void printMenu() {
 void printAdvancedOptions() {
     printf("\n-----------------------------\n");
     printf("1 - See adjacency matrix (proximity|areFriends)\n");
-    printf("2 - Show Tresh Hold\n");
+    printf("2 - Show Treshold\n");
     printf("3 - Change Treshold\n");
     printf("-----------------------------\n\n");
     return;
