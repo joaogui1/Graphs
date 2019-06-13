@@ -3,6 +3,18 @@
 #include <stdbool.h>
 #include <string.h>
 #include "utils.h"
+#include "csv.h"
+
+int getUsersCSV(Net* net){
+    int n = readCSV(net->csv, csv_pathway);
+    if(net->csv->numColumns >= 9){
+        for(int i = 0; i < n; i++){
+            Profile profile = new_Profile(net->csv->values[i]);
+            insertProfile(net, profile);
+        }
+    }
+    return n;
+}
 
 Net* initNet() {
     int error = 0;
@@ -10,8 +22,23 @@ Net* initNet() {
     net->conexions = createGraphMatrix(&error);
     net->size = 0;
     net->treshold = 7;
+    
+    net->csv = new_CSVFile();
+    if(!getUsersCSV(net)){
+        setDefaultHeader(net->csv);
+    } 
+
+    getFromFile(net->conexions, matrix_pathway);
+
     if(error) return NULL;
     return net;
+}
+
+
+void insertNetworkCSV(Net* net){
+    for(int i = net->csv->numLines; i < net->size; i++){
+        addProfile(net->csv, net->profiles[i]);
+    }
 }
 
 bool getProfile(Net* net, int* pos, int op) {

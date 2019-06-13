@@ -1,6 +1,6 @@
 // todo:
 //      traduzir e colocar memes
-//      armazenar dados
+//      armazenar dados(matriz de adjacencia)
 
 #include <stdio.h>
 #include <stdbool.h>
@@ -8,6 +8,7 @@
 #include <string.h>
 #include "utils.h"
 #include "adj_matrix.h"
+#include "csv.h"
 
 void printMenu() {
     printf("\n-----------------------------\n");
@@ -58,7 +59,6 @@ void advancedOptions(Net* net) {
 }
 
 int main() {
-    
     system("clear");
     printf("__          __  _                            \n");
     printf("\\ \\        / / | |                         \n");
@@ -144,7 +144,11 @@ int main() {
 
     } while (op != 0);
 
+    insertNetworkCSV(net);
+    writeCSV(net->csv, csv_pathway);
+    convertToFile(net->conexions, matrix_pathway);
 
+    DestroyCSV(net->csv);
     destroyGraphMatrix(net->conexions, &error);
     if (net != NULL) free(net);
 

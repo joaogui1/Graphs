@@ -43,5 +43,7 @@ void flow(Graph* g);
 void floydWarshall(Graph* g);
 int edmondKarps(Graph* g, int pos, int pos2);
 void bfsFlow(Graph* g, int source, int sink);
+int convertToFile(Graph* g, char* filename);
+int getFromFile(Graph* g, char* filename);
 
 #endif

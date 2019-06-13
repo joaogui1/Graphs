@@ -106,6 +106,7 @@ int main(){
   int edges_one, edges_two, u, v;
   int one = 1, error = 0;
 
+  HashTable* t = createHash();
 
   char* str1 = "<p><s> eu/PRS#gs1 visitei/VISITAR/V#ppi-1s sua/POSS#fs tia/TIO/CN#fs";
   char* str2 = "<p><s> eu/PRS#gs1 visitei/VISITAR/V#ppi-1s sua/POSS#fs tia/TIO/CN#fs comi/COMER/V#blabha maca/CN";

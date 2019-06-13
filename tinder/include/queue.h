@@ -2,6 +2,7 @@
 #define QUEUE_H
 
 #include "pair.h"
+#include <stdbool.h>
 
 typedef struct _node {
     Pair p;

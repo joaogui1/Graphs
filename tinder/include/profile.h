@@ -24,6 +24,7 @@ typedef struct _profile {
 } Profile;
 
 Profile createProfile();
+Profile new_Profile(char** atributes);
 void printNames(Profile* profiles, int size);
 void printProfile(Profile profile);
 void printAllProfiles(Profile* profiles, int size);
